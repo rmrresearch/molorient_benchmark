@@ -2,15 +2,15 @@ import random
 import pubchempy as pcp
 
 
-def search_pubchem(n_molecules=1000):
+def iter_pubchem(n_molecules=1000):
     """
     Randomly selects compounds from the PubChem database using
-    PubChemPy until n_molecules have been retrieved without error.
-    Returns a list of (atoms, CID) tuples.
+    PubChemPy, yielding (atoms, CID) tuples one at a time until
+    n_molecules have been retrieved without error.
     """
-    molecules = []
+    n_found = 0
     seen_cids = set()
-    while len(molecules) < n_molecules:
+    while n_found < n_molecules:
         rand_int = random.randint(1, 119000000)
         if rand_int in seen_cids:
             continue
@@ -22,6 +22,12 @@ def search_pubchem(n_molecules=1000):
             continue
 
         atoms_output = c.to_dict(properties=["atoms"])
-        molecules.append((atoms_output, rand_int))
+        n_found += 1
+        yield atoms_output, rand_int
 
-    return molecules
+
+def search_pubchem(n_molecules=1000):
+    """
+    Same as iter_pubchem, but returns a list of (atoms, CID) tuples.
+    """
+    return list(iter_pubchem(n_molecules))
