@@ -12,7 +12,9 @@ def write_molecules(molecules, output_dir):
     """
     Writes each (atoms, CID) tuple to output_dir as <CID>.txt
     in XYZ format, with the CID on the comment line.
+    Creates output_dir (and its parents) if it does not exist.
     """
+    output_dir.mkdir(parents=True, exist_ok=True)
     for atoms_output, cid in molecules:
         atoms = atoms_output["atoms"]
         lines = [str(len(atoms)), f"CID {cid}"]
