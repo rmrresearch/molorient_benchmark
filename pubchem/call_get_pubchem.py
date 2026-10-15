@@ -10,16 +10,16 @@ output_dir = Path(__file__).resolve().parent / "sno" / "unstandardized_pubchem" 
 
 def write_molecules(molecules, output_dir):
     """
-    Writes each (atoms, CID) tuple to output_dir as 0.txt, 1.txt, ...
+    Writes each (atoms, CID) tuple to output_dir as <CID>.txt
     in XYZ format, with the CID on the comment line.
     """
-    for i, (atoms_output, cid) in enumerate(molecules):
+    for atoms_output, cid in molecules:
         atoms = atoms_output["atoms"]
         lines = [str(len(atoms)), f"CID {cid}"]
         for atom in atoms:
             lines.append(f"{atom['element']} {atom['x']} {atom['y']} {atom['z']}")
-        (output_dir / f"{i}.txt").write_text("\n".join(lines) + "\n")
-        print(f"{i}.txt (CID {cid})", flush=True)
+        (output_dir / f"{cid}.txt").write_text("\n".join(lines) + "\n")
+        print(f"{cid}.txt", flush=True)
 
 
 if __name__ == "__main__":
