@@ -1,6 +1,6 @@
 from pathlib import Path
 
-standardized_dir = Path(__file__).resolve().parent.parent / "pubchem" / "standardized_pubchem"
+standardized_dir = Path(__file__).resolve().parent.parent / "pubchem" / "sno" / "standardized_pubchem"
 raw_dir = standardized_dir / "pubchem_molecules"
 perturbed_dir = standardized_dir / "perturbed_pubchem"
 

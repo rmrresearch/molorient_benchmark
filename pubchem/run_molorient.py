@@ -4,8 +4,8 @@ import sys
 from pathlib import Path
 
 pubchem_dir = Path(__file__).resolve().parent
-unstandardized_dir = pubchem_dir / "unstandardized_pubchem"
-standardized_dir = pubchem_dir / "standardized_pubchem"
+unstandardized_dir = pubchem_dir / "sno" / "unstandardized_pubchem"
+standardized_dir = pubchem_dir / "sno" / "standardized_pubchem"
 subdirs = ["pubchem_molecules", "perturbed_pubchem"]
 
 
