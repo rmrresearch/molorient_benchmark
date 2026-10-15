@@ -2,12 +2,11 @@ import argparse
 import csv
 import random
 import sys
-from decimal import Decimal, getcontext
+from decimal import Decimal, getcontext, localcontext
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from utils.helpers import round_coord
 from utils.random_perturbation import random_translation, random_rotation
 
 input_dir = Path(__file__).resolve().parent / "unstandardized_pubchem" / "pubchem_molecules"
@@ -29,18 +28,21 @@ def read_xyz(path):
     return lines[1], elements, coords
 
 
-def perturb_molecules(input_dir, output_dir, seed=None):
+def perturb_molecules(input_dir, output_dir, seed=None, digits=20):
     """
     Rotates (about the origin) then translates every molecule in input_dir
     by its own random rotation and translation, writing each to output_dir
     under the same file name. Rotation angles and translations are redrawn
     if they repeat an earlier molecule's, so every molecule's are unique.
     The parameters are recorded in output_dir/perturbations.csv.
+    Coordinates are written to `digits` significant figures, with the math done
+    20 digits beyond that, so the written error stays far below molorient's
+    output resolution and perturbed molecules standardize identically to raw ones.
     """
     if seed is not None:
         random.seed(seed)
-    # Guard digits during the math (as in molorient's orient_system); rounded to prec on output.
-    getcontext().prec += 9
+    orig_prec = getcontext().prec
+    getcontext().prec = digits + 20
     output_dir.mkdir(exist_ok=True)
 
     paths = sorted(input_dir.glob("*.txt"), key=lambda p: int(p.stem))
@@ -59,11 +61,11 @@ def perturb_molecules(input_dir, output_dir, seed=None):
             moved, translation = random_translation(rotated)
         seen_translations.add(tuple(translation))
 
-        getcontext().prec -= 9
         lines = [str(len(elements)), comment]
-        for element, (x, y, z) in zip(elements, moved):
-            lines.append(f"{element} {round_coord(x)} {round_coord(y)} {round_coord(z)}")
-        getcontext().prec += 9
+        with localcontext() as ctx:
+            ctx.prec = digits
+            for element, coord in zip(elements, moved):
+                lines.append(f"{element} " + " ".join(format(+c, "f") for c in coord))
         (output_dir / path.name).write_text("\n".join(lines) + "\n")
 
         cid = comment.split()[-1]
@@ -75,7 +77,7 @@ def perturb_molecules(input_dir, output_dir, seed=None):
         writer.writerow(["file", "cid", "yaw", "pitch", "roll", "tx", "ty", "tz"])
         writer.writerows(rows)
 
-    getcontext().prec -= 9
+    getcontext().prec = orig_prec
     assert len(seen_angles) == len(paths)
     assert len(seen_translations) == len(paths)
     print(f"Perturbed {len(paths)} molecules, all rotations and translations unique.")
@@ -84,7 +86,8 @@ def perturb_molecules(input_dir, output_dir, seed=None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument("--digits", type=int, default=20,
+                        help="significant figures written for perturbed coordinates")
     args = parser.parse_args()
 
-    getcontext().prec = 6
-    perturb_molecules(input_dir, output_dir, args.seed)
+    perturb_molecules(input_dir, output_dir, args.seed, args.digits)
