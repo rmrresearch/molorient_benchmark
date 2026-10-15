@@ -1,7 +1,6 @@
 import random
 from decimal import Decimal
-
-from utils.helpers import pi_as_decimal, sin_series, cos_series
+from molorient.helpers.trig_helpers import pi_as_decimal, sin_series, cos_series
 
 
 def random_translation(coords, max_distance=Decimal(100)):

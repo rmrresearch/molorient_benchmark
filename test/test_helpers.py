@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 from decimal import Decimal, getcontext
-
-from utils.helpers import pi_as_decimal, sin_series, cos_series, round_coord
+from molorient.helpers.trig_helpers import pi_as_decimal, sin_series, cos_series
+from utils.helpers import round_coord
 
 
 @pytest.fixture(autouse=True)

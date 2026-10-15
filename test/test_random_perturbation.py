@@ -1,8 +1,7 @@
 import random
 import pytest
 from decimal import Decimal, getcontext
-
-from utils.helpers import pi_as_decimal
+from molorient.helpers.trig_helpers import pi_as_decimal
 from utils.random_perturbation import random_translation, random_rotation
 
 
