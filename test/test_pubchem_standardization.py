@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 
-standardized_dir = Path(__file__).resolve().parent.parent / "pubchem" / "sno" / "standardized_pubchem"
+standardized_dir = Path(__file__).resolve().parent.parent / "pubchem" / "sno" / "sno_standardized_pubchem"
 raw_dir = standardized_dir / "pubchem_molecules"
 perturbed_dir = standardized_dir / "perturbed_pubchem"
 
@@ -9,7 +9,7 @@ perturbed_dir = standardized_dir / "perturbed_pubchem"
 @pytest.mark.skipif(
     not any(raw_dir.glob("*_standardized.txt")) or not perturbed_dir.is_dir(),
     reason="standardized PubChem datasets not present "
-           "(run pubchem/run_molorient.py or untar pubchem/sno/tarred_standardized/)",
+           "(run pubchem/run_molorient.py or untar pubchem/sno/sno_tarred_standardized/)",
 )
 def test_perturbed_standardize_same_as_raw():
     raw = {p.name: p for p in raw_dir.glob("*_standardized.txt")}

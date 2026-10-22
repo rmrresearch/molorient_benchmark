@@ -1,5 +1,5 @@
 .molorient_benchmark/
 __pycache__/
 .pytest_cache/
-pubchem/sno/unstandardized_pubchem/
-pubchem/sno/standardized_pubchem/
+pubchem/unstandardized_pubchem/
+pubchem/sno/sno_standardized_pubchem/
