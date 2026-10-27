@@ -3,3 +3,5 @@ __pycache__/
 .pytest_cache/
 pubchem/unstandardized_pubchem/
 pubchem/sno/sno_standardized_pubchem/
+pubchem/nwchem/nwchem_standardized_pubchem/
+pubchem/nwchem/nwchem_output/
