@@ -61,3 +61,19 @@ def test_molorient_matches_nwchem_up_to_sign(subdir):
                 if dev > tol:
                     problems.append(f"{out.stem}: max deviation {dev:.2e}")
     assert not problems, f"{len(problems)} molecules differ: {problems}"
+
+
+@pytest.mark.skipif(
+    not any((standardized_dir / "pubchem_molecules").glob("*_standardized.txt"))
+    or not (standardized_dir / "perturbed_pubchem").is_dir(),
+    reason="NWChem standardized datasets not present "
+           "(run pubchem/nwchem/run_molorient_nwchem.py "
+           "or untar pubchem/nwchem/nwchem_tarred_standardized/)",
+)
+def test_perturbed_standardize_same_as_raw():
+    raw = {p.name: p for p in (standardized_dir / "pubchem_molecules").glob("*_standardized.txt")}
+    perturbed = {p.name: p for p in (standardized_dir / "perturbed_pubchem").glob("*_standardized.txt")}
+    assert raw.keys() == perturbed.keys()
+    mismatched = sorted((name for name in raw if raw[name].read_bytes() != perturbed[name].read_bytes()),
+                        key=lambda name: int(name.split("_")[0]))
+    assert not mismatched, f"{len(mismatched)} files differ: {mismatched}"
