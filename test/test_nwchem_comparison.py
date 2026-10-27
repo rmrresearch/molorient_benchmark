@@ -36,7 +36,8 @@ def sign_deviation(molorient, nwchem):
     not any((standardized_dir / s).glob("*_standardized.txt") for s in subdirs if (standardized_dir / s).is_dir())
     or not any((output_dir / s).glob("*.out") for s in subdirs if (output_dir / s).is_dir()),
     reason="NWChem comparison datasets not present "
-           "(run pubchem/nwchem/run_molorient_nwchem.py and pubchem/nwchem/run_nwchem.py)",
+           "(run pubchem/nwchem/run_molorient_nwchem.py and pubchem/nwchem/run_nwchem.py, "
+           "or untar pubchem/nwchem/nwchem_tarred_standardized/ and pubchem/nwchem/nwchem_tarred_output/)",
 )
 @pytest.mark.parametrize("subdir", subdirs)
 def test_molorient_matches_nwchem_up_to_sign(subdir):
