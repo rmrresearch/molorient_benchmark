@@ -9,8 +9,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from utils.random_perturbation import random_translation, random_rotation
 
-input_dir = Path(__file__).resolve().parent / "sno" / "unstandardized_pubchem" / "pubchem_molecules"
-output_dir = Path(__file__).resolve().parent / "sno" / "unstandardized_pubchem" / "perturbed_pubchem"
+input_dir = Path(__file__).resolve().parent / "unstandardized_pubchem" / "pubchem_molecules"
+output_dir = Path(__file__).resolve().parent / "unstandardized_pubchem" / "perturbed_pubchem"
 
 
 def read_xyz(path):
